@@ -1,9 +1,14 @@
-
+/* #Background{
+  position: absolute;
+  background-size: cover;
+  z-index: -1000;
+} */
 
 #LimitBreak{
   position:absolute
   z-index: 1000;
   background-color: orange;
+  
 }
 
 #log{

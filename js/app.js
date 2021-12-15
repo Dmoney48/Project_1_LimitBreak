@@ -32,7 +32,7 @@ function drawPaddle(x,y){
     ctx.strokeRect(paddle.x, paddle.y, paddle.width, paddle.height);
 }
 
-document.addEventListener("keydown", function(event){
+document.addEventListener("keydown", function(event){ 
     if(event.code == "ArrowLeft"){
         leftArrow = true;
     }else if(event.code == "ArrowRight"){
@@ -65,43 +65,52 @@ const ball = {
     radius: ballRad,
     speed:3,
     dx:3,
-    dy:-3
+    dy:-3,
+    image: new Image(),
+    
 }
+ball.image.src = "https://image.pngaaa.com/239/637239-middle.png"
 //Draw ball function
 function drawBall(){
     ctx.beginPath();
     ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI*2);
     
-    ctx.fillStyle = "https://image.pngaaa.com/239/637239-middle.png"
-    ctx.fill();
-    
     ctx.strokeStyle = "#8f1010";
     ctx.stroke();
     
     ctx.closePath();
+
 }
 
+function moveBall(){
+    ball.x += ball.dx;
+    ball.y += ball.dy;
+}
 
 //Functons/Methods
 
 
-// function wallCollision(){
-//     if(ball.x + ball.radius > canvas.width || ball.x - ball.radius < 0){
-//         ball.dx = - ball.dx;
-//         WALL_HIT.play();
-//     }
+function wallCollision(){
+    if(ball.x + ball.radius > canvas.width || ball.x - ball.radius < 0){
+        ball.dx = - ball.dx;
+        // WALL_HIT.play();
+    }
     
-//     if(ball.y - ball.radius < 0){
-//         ball.dy = -ball.dy;
-//         wallHit.play();
-//     }
+    if(ball.y - ball.radius < 0){
+        ball.dy = -ball.dy;
+        // wallHit.play();
+    }
     
-//     if(ball.y + ball.radius > canvas.height){
-//         LIFE--; // LOSE LIFE
-//         LIFE_LOST.play();
+// //     if(ball.y + ball.radius > canvas.height){
+// //         LIFE--; // LOSE LIFE
+// //         LIFE_LOST.play();
 //         resetBall();
-//     }
-// }
+// //     }
+}
+
+function resetBall(){
+
+}
 
 // To reset the ball
 function ballReset(){
@@ -110,15 +119,16 @@ function ballReset(){
     ball.dx = 3 * (Math.random() * 2 - 1);
     ball.dy = -3;
 }
-// // drawRect(325,700);
-// // ctx.clear(0, 0, canvas.clientWidth, canvas.height);
+
 function draw(){
     drawPaddle();
     drawBall();
 }
 
 function update(){
-    paddle.y-=2;
+    movePaddle();
+    moveBall();
+    wallCollision();
 }
 
 function loop(){

@@ -11,6 +11,24 @@
   
 }
 
+#LimitBreakStats{
+  background-color: red;
+  float: right;
+  position: absolute;
+  margin-left: 20px;
+  margin-top: 10px;
+  z-index: -1000;
+}
+
+#LimitBreakInfo{
+  box-sizing: border-box;
+  background-color: blue;
+  float: inherit;
+  position: relative;
+  margin-left: 20px;
+  margin-bottom: 10px;
+}
+
 #log{
   position:absolute
   z-index: 1000;

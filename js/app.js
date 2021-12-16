@@ -1,6 +1,11 @@
 const canvas = document.getElementById("LimitBreak");
-
 const ctx = canvas.getContext("2d");
+
+const canvasStats = document.getElementById("LimitBreakStats");
+const ctxStat = canvasStats.getContext("2d");
+
+const canvasInfo = document.getElementById("LimitBreakInfo");
+const ctxInfo = canvasInfo.getContext("2d");
 
 canvas.style.border = "1px solid #0ff";
 
@@ -8,7 +13,29 @@ canvas.style.border = "1px solid #0ff";
 const bgImage = new Image();
 bgImage.src = "img/Totoro.jpeg"
 
-//Create Paddle Object
+const ballImage = new Image();
+ballImage.src = "img/Sharingan.png"
+
+const levelImage = new Image();
+levelImage.src = "img/Levels4Real.png";
+
+const lifeImage = new Image();
+lifeImage.src = "img/HealthPickup.gif";
+
+const pointsImage= new Image();
+pointsImage.src = "img/CoinFlip.gif";
+
+const brickSkin= new Image();
+brickSkin.src = "img/SuperBrick.jpeg";
+
+const paddleSkin= new Image();
+paddleSkin.src = "img/LimitBreak.jpeg";
+
+let levelUp = new Image();
+levelUp.src = "img/level_up.gif"
+
+
+//Create Paddle Object and set other variables.
 
 const paddleHeight = 30;
 const paddleWidth = 150;
@@ -16,6 +43,18 @@ const paddleMarginBot = 50;
 let leftArrow = false;
 let rightArrow = false;
 let lives = 3;
+let gameOver = false;
+let points = 0;
+const pointIncrease = 15;
+let brokenAll = true;
+let gameLevel = 1;
+let maxLevel = 5;
+
+
+
+
+
+
 
 const paddle = {
     x: canvas.width/2 -  paddleWidth/2,
@@ -26,11 +65,12 @@ const paddle = {
 }
 
 function drawPaddle(x,y){
-    ctx.fillStyle = "blue";
-    ctx.fillRect(paddle.x, paddle.y, paddle.width, paddle.height);
+    ctx.drawImage(paddleSkin, paddle.x, paddle.y, paddle.width, paddle.height);
+//     ctx.fillStyle = "blue";
+//     ctx.fillRect(paddle.x, paddle.y, paddle.width, paddle.height);
 
-    ctx.strokeStyle = "lime";
-    ctx.strokeRect(paddle.x, paddle.y, paddle.width, paddle.height);
+//     ctx.strokeStyle = "lime";
+//     ctx.strokeRect(paddle.x, paddle.y, paddle.width, paddle.height);
 }
 
 document.addEventListener("keydown", function(event){ 
@@ -67,20 +107,21 @@ const ball = {
     speed:3,
     dx:3,
     dy:-3,
-    image: new Image(),
+    // image: new Image(),
     
 }
-ball.image.src = "https://image.pngaaa.com/239/637239-middle.png"
+// ball.image.src = "https://image.pngaaa.com/239/637239-middle.png"
 //Draw ball function
 function drawBall(){
-    ctx.beginPath();
-    ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI*2);
-    ctx.fillStyle = "red";
-    ctx.fill()
-    ctx.strokeStyle = "#8f1010";
-    ctx.stroke();
+    ctx.drawImage(ballImage,(ball.x - 10) , (ball.y - 10), 22, 22 );
+    // ctx.beginPath();
+    // ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI*2);
+    // ctx.fillStyle = "red";
+    // ctx.fill()
+    // ctx.strokeStyle = "#8f1010";
+    // ctx.stroke();
     
-    ctx.closePath();
+    // ctx.closePath();
 
 }
 
@@ -139,8 +180,7 @@ const brick = {
     offSetLeft : 35,
     offSetTop : 40,
     marginTop : 10,
-    fillColor : "#47d911",
-    strokeColor : "#FFF"
+    
 
 }
 let bricks = [];
@@ -166,11 +206,12 @@ function drawBricks(){
             let brickz = bricks[i][g];
             // if the brick isn't broken
             if(brickz.status){
-                ctx.fillStyle = brick.fillColor;
-                ctx.fillRect(brickz.x, brickz.y, brick.width, brick.height);
+                ctx.drawImage(brickSkin,brickz.x, brickz.y, brick.width, brick.height);
+                // ctx.fillStyle = brick.fillColor;
+                // ctx.fillRect(brickz.x, brickz.y, brick.width, brick.height);
                 
-                ctx.strokeStyle = brick.strokeColor;
-                ctx.strokeRect(brickz.x, brickz.y, brick.width, brick.height);
+                // ctx.strokeStyle = brick.strokeColor;
+                // ctx.strokeRect(brickz.x, brickz.y, brick.width, brick.height);
             }
         }
     }
@@ -186,17 +227,65 @@ function ballBrickCollision(){
                     //Brick breaking sound?
                     ball.dy = - ball.dy;
                     newBricks.status = false; // this is the conditional for the brick breaking
-                    //increment score value TBD. 
+                    points += pointIncrease
                 }
             }
         }
     }
+}
+function GameOver(){
+if(lives <= 0);
+// youLost();
+gameOver = true;
+}
+
+function nextLevel(){
+    let levelComplete = true;
+    
+    for(let i = 0; i < brick.row; i++){
+        for(let g = 0; g < brick.column; g++){
+            levelComplete = levelComplete && ! bricks[i][g].status;
+        }
+    }
+    
+    if(levelComplete){
+      //Level up Sound
+        
+        if(gameLevel >= maxLevel){
+            //Win game
+            gameOver = true;
+            return;
+        }
+        brick.row++;
+        makeBricks();
+        ball.speed += 3;
+        ballReset();
+        gameLevel++;
+        lives++;
+    }
+}
+
+function gameStats(text, textX, textY, img, imgX, imgY){
+    // draw text
+    ctxStat.fillStyle = "#FFF";
+    ctxStat.font = "25px Germania One";
+    ctxStat.fillText(text, textX, textY);
+
+    ctxStat.drawImage(img, imgX, imgY, width = 25, height = 25);
+    
+
 }
 
 function draw(){
     drawPaddle();
     drawBall();
     drawBricks();
+
+    
+    gameStats(points, 35, 25, pointsImage, 5, 5);
+    gameStats(lives, canvasStats.width - 25, 25, lifeImage, canvasStats.width-55, 5); 
+    gameStats(gameLevel, canvasStats.width/2, 25, levelImage, canvasStats.width/2 - 30, 5);
+
 }
 
 function update(){
@@ -205,14 +294,19 @@ function update(){
     wallCollision();
     ballAndPaddleHit()
     ballBrickCollision();
+    GameOver();
+    nextLevel();
 }
 
 function loop(){
     //clear canvas
     ctx.drawImage(bgImage, 0, 0, canvas.width, canvas.height);
+    ctxStat.clearRect(0, 0, canvasStats.width, canvasStats.height);
     draw();
     update();
-    requestAnimationFrame(loop);
+    // if(!gameOver){
+        requestAnimationFrame(loop);
+    // } 
 }
 
 loop();

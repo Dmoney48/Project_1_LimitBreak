@@ -104,7 +104,7 @@ const ball = {
     x:canvas.width/2,
     y:paddle.y- ballRad,
     radius: ballRad,
-    speed:3,
+    speed:4,
     dx:3,
     dy:-3,
     // image: new Image(),
@@ -234,9 +234,10 @@ function ballBrickCollision(){
     }
 }
 function GameOver(){
-if(lives <= 0);
-// youLost();
-gameOver = true;
+    if(lives <= 0){
+         gameOver = true;
+        alert("You lose BAKA!! Refresh to play again")
+    }
 }
 
 function nextLevel(){
@@ -258,7 +259,7 @@ function nextLevel(){
         }
         brick.row++;
         makeBricks();
-        ball.speed += 3;
+        ball.speed += 2;
         ballReset();
         gameLevel++;
         lives++;
@@ -304,9 +305,9 @@ function loop(){
     ctxStat.clearRect(0, 0, canvasStats.width, canvasStats.height);
     draw();
     update();
-    // if(!gameOver){
+    if(!gameOver){
         requestAnimationFrame(loop);
-    // } 
+    } 
 }
 
 loop();

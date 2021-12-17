@@ -17,7 +17,6 @@
   position: absolute;
   margin-left: 20px;
   margin-top: 10px;
-  z-index: -1000;
 }
 
 #LimitBreakInfo{
@@ -26,11 +25,11 @@
   float: inherit;
   position: relative;
   margin-left: 20px;
-  margin-bottom: 10px;
+  margin-bottom: 10;
 }
 
-#log{
+/* #log{
   position:absolute
   z-index: 1000;
   background-color: green;
-}
+} */
